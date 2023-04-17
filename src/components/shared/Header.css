@@ -1,0 +1,16 @@
+.Menu {
+  visibility: hidden;
+  opacity: 0;
+  z-index: 50;
+}
+
+.name:hover .Menu {
+  opacity: 1;
+  visibility: visible;
+  transition: all 500ms ease;
+}
+
+.menuchidlren {
+  border-top: 1px solid black;
+  padding: 20px;
+}

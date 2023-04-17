@@ -1,0 +1,26 @@
+.text {
+  position: relative;
+  transition: all 500ms ease;
+  backface-visibility: hidden;
+  cursor: pointer;
+}
+.text:hover {
+  padding-left: 10px;
+  box-sizing: border-box;
+  color: white;
+  text-decoration: none;
+}
+.text:before {
+  content: '';
+  position: absolute;
+  width: 0px;
+  height: 1px;
+  transition: all 500ms ease;
+  backface-visibility: hidden;
+  left: 0;
+  top: 11px;
+}
+.text:hover:before {
+  width: 0px;
+  background-color: white;
+}

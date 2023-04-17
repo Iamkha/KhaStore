@@ -1,0 +1,8 @@
+.afterLink::after {
+  font-family: unset;
+  line-height: 17px;
+  font-size: 12px;
+  content: '|';
+  margin: 10px 10px 3px;
+  bottom: 2px;
+}
