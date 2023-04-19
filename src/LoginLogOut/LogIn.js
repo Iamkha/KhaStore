@@ -1,0 +1,133 @@
+import React, { useState } from 'react';
+import Notification from '../components/Home/Notification';
+import Input from '../components/customs/Input';
+import CheckInput from '../components/customs/CheckInput';
+import ButtonIO from './ButtonIO';
+import { useEffect } from 'react';
+import { collection, getDoc, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
+import { useFormik } from 'formik';
+import { loginSchema } from '../components/Yup/LoginSchema';
+import { useNavigate } from 'react-router-dom';
+import { BiErrorAlt } from 'react-icons/bi';
+import { getCookie, setCookie } from '../components/cookies/Cookies';
+
+const LogIn = () => {
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [user, setUser] = useState([]);
+  const [messenger, setMessenger] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { values, touched, errors, handleBlur, handleChange, handleSubmit, isSubmitting } = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: loginSchema,
+    onSubmit: (values, actions) => {
+      setLoading(true);
+      user.map((data) => {
+        if (data.email === values.email && data.password === values.password) {
+          setTimeout(() => {
+            setCookie('userId', data.id);
+            navigate('/');
+            setLoading(false);
+            actions.resetForm();
+            setMessenger('');
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            actions.resetForm();
+            setLoading(false);
+            setMessenger(
+              'Tài khoản đăng nhập không chính xác hoặc tạm thời bị vô hiệu hóa. Vui lòng đợi và thử lại sau.',
+            );
+          }, 2000);
+        }
+      });
+    },
+  });
+
+  const usersCollectionRef = collection(db, 'users');
+
+  useEffect(() => {
+    const getUsers = async () => {
+      let data = await getDocs(usersCollectionRef);
+      setUser(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getUsers();
+  }, []);
+
+  const onChangePassword = () => {
+    setShowPassword(!showPassword);
+  };
+
+  return (
+    <div>
+      <Notification />
+      <div className="flex justify-center ">
+        <div className="xl:w-[1290px] w-full mb-[100px]">
+          {messenger !== '' && (
+            <div className="bg-red-200 h-[42px] flex items-center mt-[20px]">
+              <BiErrorAlt className="text-[24px] ml-[20px] text-rose-900" />
+              <p className=" ml-[20px] font-semibold text-rose-900   text-[13px] opacity-70">{messenger}</p>
+            </div>
+          )}
+          <p className="font-black text-[28px] my-[30px]">TÀI KHOẢN</p>
+          <div className="flex justify-between ">
+            <form className="w-[48%]" onSubmit={handleSubmit}>
+              <p className="text-[12px] py-[12px] my-[15px] border-b-[1px]">Khách hàng đã đăng ký tài khoản</p>
+              <p className="text-[15px]">Bạn đã có tài khoản, xin mời đăng nhập bằng địa chỉ email đăng ký.</p>
+              <div className="w-[350px] mt-[20px]">
+                <Input
+                  id={'email'}
+                  errors={touched.email && errors.email}
+                  value={values.email}
+                  setonChange={handleChange}
+                  name="Email"
+                />
+
+                {touched.email && errors.email && <p className="text-[12px] text-red-500 mt-[8px]">{errors.email}</p>}
+              </div>
+              <div className="w-[350px] mt-[20px]">
+                <Input
+                  id={'password'}
+                  value={values.password}
+                  setonChange={handleChange}
+                  showPassword={showPassword}
+                  name="Mật Khẩu"
+                  errors={touched.password && errors.password}
+                />
+                {touched.password && errors.password && (
+                  <p className="text-[12px] text-red-500 mt-[8px]">{errors.password}</p>
+                )}
+              </div>
+              <div className="my-[20px]">
+                <CheckInput
+                  onChange={onChangePassword}
+                  showPassword={showPassword}
+                  title="Hiển thị mật khẩu"
+                  id="passwordCheck"
+                />
+              </div>
+              <div>
+                <ButtonIO loading={loading} name="Đăng nhập" />
+                <a className="font-[16px] text-blue-600 hover:border-b-[1px] cursor-pointer hover:border-blue-600 ml-[10px]">
+                  Quên mật khẩu
+                </a>
+              </div>
+            </form>
+            <div className="w-[48%]">
+              <p className="text-[12px] py-[12px] my-[15px] border-b-[1px]">Khách hàng mới</p>
+              <a href="">
+                <ButtonIO name="Đăng ký" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default LogIn;

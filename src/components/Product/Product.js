@@ -4,22 +4,25 @@ import './Product.css';
 import ButtomA from '../customs/ButtomA';
 import Img from '../customs/Img';
 import Paging from '../customs/Paging';
+import { useEffect } from 'react';
+import { useCookies } from 'react-cookie';
+import { getCookie, removeCookie, setCookie } from '../cookies/Cookies';
 
 const Product = ({ ...props }) => {
   const [arrow, setArrow] = useState(false);
-  const {
-    arrImg = [
-      { img: 'https://onoff.vn/media/catalog/product/cache/ecd9e5267dd6c36af89d5c309a4716fc/18IA22A022-SW001.jpg' },
-      { img: 'https://onoff.vn/media/catalog/product/cache/ecd9e5267dd6c36af89d5c309a4716fc/18IA22A022-SK001.jpg' },
-    ],
-  } = props;
+  const [count, setCount] = useState(1);
+
+  const { data } = props;
   const handleSubmit = (e) => {
     e.preventDefault();
     setArrow(!arrow);
   };
+  useEffect(() => {}, []);
   const handleClick = () => {
     window.alert('anhkha');
+    setCount(count + 1);
   };
+
   return (
     <div>
       <form onSubmit={handleSubmit} className="flex justify-end mb-[20px] h-[50px]">
@@ -33,34 +36,37 @@ const Product = ({ ...props }) => {
         </select>
         <button type="submit">{arrow ? <ImArrowUp /> : <ImArrowDown />}</button>
       </form>
-      <div className="flex flex-wrap mb-[70px]">
-        <div className="">
-          <Img
-            img1={'https://onoff.vn/media/catalog/product/cache/ecd9e5267dd6c36af89d5c309a4716fc/18IA22A022-SW001.jpg'}
-            img2={'https://onoff.vn/media/catalog/product/cache/ecd9e5267dd6c36af89d5c309a4716fc/18IA22A022-SK001.jpg'}
-          />
-
-          <div className="flex mt-[10px]">
-            {arrImg.map((data) => (
-              <div className="truncate w-[40px] h-[40px] mr-[10px] border border-solid-[1px] cursor-pointer hover:border-black">
-                <img className=" " src={data.img} />
+      <div className="flex flex-wrap mb-[70px]  gap-7">
+        {data.map((d) => (
+          <div key={d.id} className="">
+            <div className="mt-10">
+              <Img handleClick={handleClick} data={d.src} img1={d?.src[1]?.name} img2={d.src[0].name} />
+              <div className="flex flex-wrap">
+                {d.src.map((p) => (
+                  <div
+                    key={p.id}
+                    className="truncate  mt-[10px] w-[40px] h-[40px] mr-[10px] border border-solid-[1px] cursor-pointer hover:border-black"
+                  >
+                    <img className=" " src={p.name} />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <div className="w-full flex mt-[3px] justify-start ">
-            <a className="text-[14px]  w-full text-start ">kha</a>
-          </div>
+              <div className="w-full flex mt-[3px] justify-start ">
+                <a className="text-[14px]  w-full text-start ">{d.name}</a>
+              </div>
 
-          <div className="w-full flex mt-[3px] justify-start ">
-            <p className="text-[14px]  w-full text-start font-semibold">37.000 đ</p>
+              <div className="w-full flex mt-[3px] justify-start ">
+                <p className="text-[14px]  w-full text-start font-semibold">{d.price}000 đ</p>
+              </div>
+            </div>
           </div>
-        </div>
+        ))}
       </div>
       <div className="mb-[70px]">
         <Paging
           arr={[
             { id: 1, name: 1 },
-            { id: 1, name: 2 },
+            { id: 2, name: 2 },
           ]}
         />
       </div>

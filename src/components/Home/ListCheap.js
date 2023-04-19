@@ -17,7 +17,6 @@ const ListCheap = () => {
     get(child(dbRef, `product`))
       .then((snapshot) => {
         if (snapshot.exists()) {
-          console.log(snapshot.val(), 'data2');
           setData(snapshot.val());
         } else {
           console.log('No data available');
@@ -27,19 +26,19 @@ const ListCheap = () => {
         console.error(error);
       });
   }, [dbRef, data]);
-  console.log(data, 'data');
+
   return (
     <div>
       <div className="w-full relative  h-auto flex justify-center">
-        <div className="w-[67.7%] h-[350px] ">
+        <div className="xl:w-[1290px] w-full h-[350px] ">
           <Swiper autoHeight={true} slidesPerView={5} spaceBetween={10} className="mySwiper">
             {data.map((d, index) => (
-              <div key={index}>
+              <div key={d.id}>
                 <SwiperSlide>
                   <div className="relative wrapper w-full h-auto">
                     <img className=" img1 max-w-[224px] cursor-pointer max-h-[280px]" src={d?.src[0]?.name} />
                     <div className="img2 absolute">
-                      <img className="  w-100%  relative cursor-pointer max-h-[280px]" src={d?.src[1]?.name} />
+                      <img className="  w-100%]  relative cursor-pointer max-h-[280px]" src={d?.src[1]?.name} />
 
                       <a className=" flex items-center justify-center cursor-pointer  absolute bg-slate-700 bg-opacity-50 text-white top-[80%] right-[15%] w-[150px] h-[36px] ">
                         <p>Mua Nhanh</p>

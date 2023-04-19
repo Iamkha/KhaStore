@@ -15,7 +15,6 @@ const Nam = () => {
     get(child(dbRef, `product`))
       .then((snapshot) => {
         if (snapshot.exists()) {
-          console.log(snapshot.val(), 'data2');
           setData(snapshot.val());
         } else {
           console.log('No data available');
@@ -25,11 +24,12 @@ const Nam = () => {
         console.error(error);
       });
   }, [dbRef, data]);
+  const dataProduct = data.filter((data) => data.for === 'nam');
   return (
     <div>
       <Notification />
       <div className="w-full flex justify-center">
-        <div className=" w-[68%] flex justify-between">
+        <div className=" w-[1290px] flex justify-between">
           <SizeBar
             title={'Nam'}
             materialData={materialMen}
@@ -42,7 +42,7 @@ const Nam = () => {
               src="https://onoff.vn/media/import/banneronoff/Web/banner/nam-291122.jpg"
               title="SẢN PHẨM NAM"
             />
-            <Product />
+            <Product data={dataProduct} />
           </div>
         </div>
       </div>

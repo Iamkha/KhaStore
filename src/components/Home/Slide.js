@@ -25,6 +25,9 @@ function Slide() {
         console.error(error);
       });
   }, [dbRef, data]);
+  console.log(data);
+
+  const dataProduct = data.filter((d) => d.for === 'nam');
 
   return (
     <div className=" flex w-full ml-[-9px] h-[793px] items-center">
@@ -44,7 +47,7 @@ function Slide() {
         modules={[Autoplay, Pagination, Navigation, FreeMode]}
         className="mySwiper"
       >
-        {data.map((data) => (
+        {data.map((data, index) => (
           <div key={data.id}>
             <SwiperSlide>
               <img className="h-full w-auto" src={data.src} />

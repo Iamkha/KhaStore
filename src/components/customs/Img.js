@@ -2,7 +2,7 @@ import React from 'react';
 import './img.css';
 
 const Img = ({ ...props }) => {
-  const { img1, img2, handleClick = () => {} } = props;
+  const { data, img1, img2, handleClick = () => {} } = props;
   return (
     <div className="relative wrapper w-full h-auto">
       <div className="flex justify-start">

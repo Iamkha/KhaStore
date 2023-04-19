@@ -17,7 +17,6 @@ const NewProduct = () => {
     get(child(dbRef, `product`))
       .then((snapshot) => {
         if (snapshot.exists()) {
-          console.log(snapshot.val(), 'data2');
           setData(snapshot.val());
         } else {
           console.log('No data available');
@@ -27,12 +26,11 @@ const NewProduct = () => {
         console.error(error);
       });
   }, [dbRef, data]);
-  console.log(data, 'data');
   return (
     <div className="mb-[70px]">
       <h3 className="mb-[40px] text-[26px] w-full text-center">SẢN PHẨM MỚI</h3>
       <div className="w-full flex justify-center">
-        <div className="w-[67.7%] h-[350px] ">
+        <div className="xl:w-[1290px] w-full  h-[350px] ">
           <Swiper
             autoHeight={true}
             slidesPerView={5}
@@ -42,7 +40,7 @@ const NewProduct = () => {
             className="mySwiper"
           >
             {data.map((d, index) => (
-              <div key={index}>
+              <div key={d.id}>
                 <SwiperSlide>
                   <div className="w-full h-auto">
                     <div className="relative">

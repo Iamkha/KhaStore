@@ -1,18 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Logo from '../../images/Logo.png';
 import { FaRegUserCircle, FaMapMarkerAlt } from 'react-icons/fa';
 import { BsFillCartFill, BsSearch } from 'react-icons/bs';
 import './Header.css';
 import { dataMale, dataFemale, dataChildren, dataCollection } from '../data/fakeData';
 import MenuHeader from './MenuHeader';
+import { getCookie } from '../cookies/Cookies';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const [value, setValue] = useState('');
-
+  const [user, setUser] = useState();
+  const navigate = useNavigate();
   const handleSearch = (e) => {
     e.preventDefault();
     console.log(value, 'value');
     setValue('');
+  };
+  const cookiesUser = getCookie('user');
+  useEffect(() => {
+    setUser(cookiesUser);
+  }, [user]);
+  const handleUser = () => {
+    if (cookiesUser !== undefined) {
+      alert('Bạn đã đăng nhập rồi nhé!');
+    } else {
+      navigate('/login');
+    }
   };
   return (
     <div className="  w-full  flex justify-center  z-50 h-[76px] top-0 bg-white sticky items-center shadow-sm">
@@ -115,7 +129,13 @@ const Header = () => {
             </form>
             <div className="flex">
               <FaMapMarkerAlt className="h-[22px] ml-[22px] text-[20px] hover:text-fuchsia-700 cursor-pointer" />
-              <FaRegUserCircle className="h-[22px] ml-[22px] text-[20px] hover:text-fuchsia-700 cursor-pointer" />
+              {user !== undefined ? (
+                'kha'
+              ) : (
+                <button onClick={handleUser}>
+                  <FaRegUserCircle className="h-[22px] ml-[22px] text-[20px] hover:text-fuchsia-700 cursor-pointer" />
+                </button>
+              )}
               <BsFillCartFill className="h-[22px] ml-[22px] text-[20px] hover:text-fuchsia-700 cursor-pointer" />
             </div>
           </div>
