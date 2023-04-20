@@ -1,16 +1,16 @@
 import React from 'react';
 import { useState } from 'react';
 import { BiErrorAlt } from 'react-icons/bi';
-import Input from '../components/customs/Input';
-import CheckInput from '../components/customs/CheckInput';
+import Input from '../customs/Input';
+import CheckInput from '../customs/CheckInput';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import ButtonIO from './ButtonIO';
-import { registerSchema } from '../components/Yup/registerSchema';
+import { registerSchema } from '../Yup/registerSchema';
 import { addDoc, collection, getDoc, getDocs } from 'firebase/firestore';
 import { useEffect } from 'react';
-import { db } from '../firebase';
-import Notification from '../components/Home/Notification';
+import { db } from '../../firebase';
+import Notification from '../Home/Notification';
 
 const Register = () => {
   const navigate = useNavigate();

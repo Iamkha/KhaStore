@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import Notification from '../components/Home/Notification';
-import Input from '../components/customs/Input';
+import Notification from '../Home/Notification';
+import Input from '../customs/Input';
 import ButtonIO from './ButtonIO';
 import { useEffect } from 'react';
 import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '../../firebase';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { BiErrorAlt } from 'react-icons/bi';
-import { getCookie, setCookie } from '../components/cookies/Cookies';
-import { newPasswordSchema } from '../components/Yup/newPasswordSchema';
+import { getCookie, setCookie } from '../cookies/Cookies';
+import { newPasswordSchema } from '../Yup/newPasswordSchema';
 import { useDispatch, useSelector } from 'react-redux';
-import { addNewPassword } from '../components/features/newPasswordSlice';
+import { addNewPassword } from '../features/newPasswordSlice';
 
 const NewPassword = () => {
   const navigate = useNavigate();

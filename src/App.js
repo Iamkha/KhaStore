@@ -6,11 +6,11 @@ import Home from './components/Home/Home';
 import Header from './components/shared/Header';
 import Footer from './components/shared/Footer';
 import Nam from './components/Product/Nam';
-import LogIn from './LoginLogOut/LogIn';
-import Register from './LoginLogOut/Register';
+import LogIn from './components/LoginLogOut/LogIn';
+import Register from './components/LoginLogOut/Register';
 import { useEffect } from 'react';
-import NewPasswordEmail from './LoginLogOut/NewPasswordEmail';
-import NewPassword from './LoginLogOut/NewPassword';
+import NewPasswordEmail from './components/LoginLogOut/NewPasswordEmail';
+import NewPassword from './components/LoginLogOut/NewPassword';
 
 function App() {
   const dbRef = ref(database);

@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
-import Notification from '../components/Home/Notification';
-import Input from '../components/customs/Input';
-import CheckInput from '../components/customs/CheckInput';
+import Notification from '../Home/Notification';
+import Input from '../customs/Input';
+import CheckInput from '../customs/CheckInput';
 import ButtonIO from './ButtonIO';
 import { useEffect } from 'react';
 import { collection, getDoc, getDocs } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db } from '../../firebase';
 import { useFormik } from 'formik';
-import { loginSchema } from '../components/Yup/LoginSchema';
+import { loginSchema } from '../Yup/LoginSchema';
 import { useNavigate } from 'react-router-dom';
 import { BiCheckCircle, BiErrorAlt } from 'react-icons/bi';
-import { getCookie, setCookie } from '../components/cookies/Cookies';
+import { getCookie, setCookie } from '../cookies/Cookies';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeNewPassword } from '../components/features/newPasswordSlice';
+import { removeNewPassword } from '../features/newPasswordSlice';
 
 const LogIn = () => {
   const navigate = useNavigate();
