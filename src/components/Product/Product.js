@@ -20,6 +20,7 @@ const Product = ({ ...props }) => {
   useEffect(() => {}, []);
   const handleClick = () => {
     window.alert('anhkha');
+    setCookie('user', undefined);
     setCount(count + 1);
   };
 
@@ -29,7 +30,7 @@ const Product = ({ ...props }) => {
         <div className="flex justify-start items-center h-full">
           <p className="mr-[10px] ">Sắp xếp theo </p>
         </div>
-        <select className="mt-[10px] mr-[10px]" name="arrange" id="arrange">
+        <select className="selectP mt-[10px] mr-[10px]" name="arrange" id="arrange">
           <option value="location">Vị trí</option>
           <option value="name">Tên Sản Phẩm</option>
           <option value="price">Giá</option>

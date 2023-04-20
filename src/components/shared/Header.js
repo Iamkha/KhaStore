@@ -5,7 +5,7 @@ import { BsFillCartFill, BsSearch } from 'react-icons/bs';
 import './Header.css';
 import { dataMale, dataFemale, dataChildren, dataCollection } from '../data/fakeData';
 import MenuHeader from './MenuHeader';
-import { getCookie } from '../cookies/Cookies';
+import { getCookie, setCookie } from '../cookies/Cookies';
 import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
@@ -21,11 +21,12 @@ const Header = () => {
   useEffect(() => {
     setUser(cookiesUser);
   }, [user]);
+
   const handleUser = () => {
-    if (cookiesUser !== undefined) {
+    if (cookiesUser === undefined) {
       alert('Bạn đã đăng nhập rồi nhé!');
     } else {
-      navigate('/login');
+      navigate('/customer/account/login');
     }
   };
   return (
@@ -128,15 +129,19 @@ const Header = () => {
               </button>
             </form>
             <div className="flex">
-              <FaMapMarkerAlt className="h-[22px] ml-[22px] text-[20px] hover:text-fuchsia-700 cursor-pointer" />
-              {user !== undefined ? (
+              <button>
+                <FaMapMarkerAlt className="h-[22px] ml-[22px] text-[20px] hover:text-fuchsia-700 cursor-pointer" />
+              </button>
+              {user === undefined ? (
                 'kha'
               ) : (
                 <button onClick={handleUser}>
                   <FaRegUserCircle className="h-[22px] ml-[22px] text-[20px] hover:text-fuchsia-700 cursor-pointer" />
                 </button>
               )}
-              <BsFillCartFill className="h-[22px] ml-[22px] text-[20px] hover:text-fuchsia-700 cursor-pointer" />
+              <button>
+                <BsFillCartFill className="h-[22px] ml-[22px] text-[20px] hover:text-fuchsia-700 cursor-pointer" />
+              </button>
             </div>
           </div>
         </div>

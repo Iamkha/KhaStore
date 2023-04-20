@@ -1,11 +1,11 @@
 import React from 'react';
 
 const CheckInput = ({ ...props }) => {
-  const { showPassword = false, id, onChange = () => {}, title } = props;
+  const { type = 'checkbox', showPassword = false, id, onChange = () => {}, title } = props;
   return (
     <div>
       <input
-        type="checkbox"
+        type={type}
         checked={showPassword}
         onChange={(e) => onChange(e.target.checked)}
         className="inputCheck"

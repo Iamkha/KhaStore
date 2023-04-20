@@ -9,14 +9,23 @@ import { db } from '../firebase';
 import { useFormik } from 'formik';
 import { loginSchema } from '../components/Yup/LoginSchema';
 import { useNavigate } from 'react-router-dom';
-import { BiErrorAlt } from 'react-icons/bi';
+import { BiCheckCircle, BiErrorAlt } from 'react-icons/bi';
 import { getCookie, setCookie } from '../components/cookies/Cookies';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeNewPassword } from '../components/features/newPasswordSlice';
 
 const LogIn = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const messengerNewPassword = useSelector((state) => state.newPasswords);
+  console.log(messengerNewPassword);
+
   const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState([]);
   const [messenger, setMessenger] = useState('');
+  const [messengerNewPasswordUser, setMessengerNewPasswordUser] = useState(messengerNewPassword[0]?.name);
+  console.log(messengerNewPasswordUser, 'hasvbdasv');
   const [loading, setLoading] = useState(false);
   const { values, touched, errors, handleBlur, handleChange, handleSubmit, isSubmitting } = useFormik({
     initialValues: {
@@ -25,6 +34,8 @@ const LogIn = () => {
     },
     validationSchema: loginSchema,
     onSubmit: (values, actions) => {
+      const action = removeNewPassword({ id: 1 });
+      dispatch(action);
       setLoading(true);
       user.map((data) => {
         if (data.email === values.email && data.password === values.password) {
@@ -39,6 +50,7 @@ const LogIn = () => {
           setTimeout(() => {
             actions.resetForm();
             setLoading(false);
+            setMessengerNewPasswordUser(undefined);
             setMessenger(
               'Tài khoản đăng nhập không chính xác hoặc tạm thời bị vô hiệu hóa. Vui lòng đợi và thử lại sau.',
             );
@@ -71,6 +83,15 @@ const LogIn = () => {
             <div className="bg-red-200 h-[42px] flex items-center mt-[20px]">
               <BiErrorAlt className="text-[24px] ml-[20px] text-rose-900" />
               <p className=" ml-[20px] font-semibold text-rose-900   text-[13px] opacity-70">{messenger}</p>
+            </div>
+          )}
+
+          {messengerNewPasswordUser !== undefined && (
+            <div className="bg-green-100 h-[42px] flex items-center mt-[20px]">
+              <BiCheckCircle className="text-[24px] ml-[20px] text-green-500" />
+              <p className=" ml-[20px] font-semibold text-green-900   text-[13px] opacity-70">
+                {messengerNewPasswordUser}
+              </p>
             </div>
           )}
           <p className="font-black text-[28px] my-[30px]">TÀI KHOẢN</p>
@@ -112,14 +133,17 @@ const LogIn = () => {
               </div>
               <div>
                 <ButtonIO loading={loading} name="Đăng nhập" />
-                <a className="font-[16px] text-blue-600 hover:border-b-[1px] cursor-pointer hover:border-blue-600 ml-[10px]">
+                <a
+                  href="/customer/account/forgotpassword"
+                  className="font-[16px] text-blue-600 hover:border-b-[1px] cursor-pointer hover:border-blue-600 ml-[10px]"
+                >
                   Quên mật khẩu
                 </a>
               </div>
             </form>
             <div className="w-[48%]">
               <p className="text-[12px] py-[12px] my-[15px] border-b-[1px]">Khách hàng mới</p>
-              <a href="">
+              <a href="/customer/account/create">
                 <ButtonIO name="Đăng ký" />
               </a>
             </div>

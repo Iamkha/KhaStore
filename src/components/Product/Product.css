@@ -1,4 +1,4 @@
-select {
+.selectP {
   -webkit-appearance: none;
   -moz-appearance: none;
   text-indent: 1px;
@@ -17,7 +17,7 @@ select {
   outline: none;
 }
 
-select:focus {
+.selectP:focus {
   border: 1px solid #c2c2c2;
   box-shadow: 0 0 3px 1px #00699d;
 }
