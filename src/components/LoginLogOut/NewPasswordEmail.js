@@ -59,8 +59,8 @@ const NewPasswordEmail = () => {
     <div>
       <Notification />
       <div className="flex justify-center ">
-        <div className="w-[1290px]">
-          <form className="w-[650px]" onSubmit={handleSubmit}>
+        <div className="w-[1250px] px-[20px]">
+          <form className="w-[650px] " onSubmit={handleSubmit}>
             {messenger !== '' && (
               <div className="bg-red-200 h-[42px] flex items-center mt-[20px]">
                 <BiErrorAlt className="text-[24px] ml-[20px] text-rose-900" />

@@ -11,12 +11,18 @@ import { addDoc, collection, getDoc, getDocs } from 'firebase/firestore';
 import { useEffect } from 'react';
 import { db } from '../../firebase';
 import Notification from '../Home/Notification';
+import { addRegister } from '../features/registerSlice';
+import { useDispatch } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
+import { addUserSlide } from '../features/addUserSlide';
 
 const Register = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [showPassword, setShowPassword] = useState(false);
   const [allowRemote, setAllowRemote] = useState(false);
+
   const [registerReceiveNewsletter, setRegisterReceiveNewsletter] = useState(false);
   const [user, setUser] = useState([]);
   const [messenger, setMessenger] = useState('');
@@ -36,6 +42,7 @@ const Register = () => {
     initialValues: {
       lastName: '',
       firtName: '',
+      url: '',
       date: '',
       gender: '',
       email: '',
@@ -45,38 +52,41 @@ const Register = () => {
     validationSchema: registerSchema,
     onSubmit: (values, actions) => {
       setLoading(true);
-      user.map((data) => {
-        if (String(data.email) === String(values.email)) {
-          setTimeout(() => {
-            setRegisterReceiveNewsletter(false);
-            setShowPassword(false);
-            setAllowRemote(false);
-            actions.resetForm();
-            setLoading(false);
-            setMessenger('Email đã tồn tại xin hãy thử email khác.');
-          }, 2000);
+      const checkUser = user.map((data) => String(data.email) === String(values.email));
+
+      setTimeout(() => {
+        if (checkUser.includes(true)) {
+          setRegisterReceiveNewsletter(false);
+          setShowPassword(false);
+          setAllowRemote(false);
+          actions.resetForm();
+          setLoading(false);
+          setMessenger('Email đã tồn tại xin hãy thử email khác.');
         } else {
-          setTimeout(() => {
-            setRegisterReceiveNewsletter(false);
-            setShowPassword(false);
-            setAllowRemote(false);
-            addDoc(usersCollectionRef, {
-              date: values.date,
-              email: values.email,
-              firtName: values.firtName,
-              lastName: values.lastName,
-              gender: values.gender,
-              password: values.password,
-              registerReceiveNewsletter: registerReceiveNewsletter,
-              allowRemote: allowRemote,
-            });
-            navigate('/customer/account/login');
-            setLoading(false);
-            actions.resetForm();
-            setMessenger('');
-          }, 2000);
+          const action = addRegister({ name: 'Bạn đã đăng kí tài khoản thành công.', id: 1 });
+          dispatch(action);
+          const actionUser = addUserSlide({
+            date: values.date,
+            email: values.email,
+            url: values.url,
+            id: uuidv4(),
+            firtName: values.firtName,
+            lastName: values.lastName,
+            gender: values.gender,
+            password: values.password,
+            registerReceiveNewsletter: registerReceiveNewsletter,
+            allowRemote: allowRemote,
+          });
+          dispatch(actionUser);
+          setRegisterReceiveNewsletter(false);
+          setShowPassword(false);
+          setAllowRemote(false);
+          navigate('/customer/account/login');
+          setLoading(false);
+          actions.resetForm();
+          setMessenger('');
         }
-      });
+      }, 2000);
     },
   });
 
@@ -93,7 +103,7 @@ const Register = () => {
     <div>
       <Notification />
       <div className=" flex justify-center ">
-        <div className="w-[1290px]">
+        <div className="w-[1250px] px-[20px]">
           <form className="w-[650px]" onSubmit={handleSubmit}>
             {messenger !== '' && (
               <div className="bg-red-200 h-[42px] flex items-center mt-[20px]">

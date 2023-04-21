@@ -7,5 +7,8 @@ export const registerSchema = yup.object().shape({
   gender: yup.string().required('Gender is not null'),
   email: yup.string().email('Please enter a valid email').required('Email is not null'),
   password: yup.string().min(5).required('Password is not null'),
-  confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref('password'), null], 'Passwords must match')
+    .required('Password is not null'),
 });

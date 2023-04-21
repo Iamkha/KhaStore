@@ -7,20 +7,37 @@ import { dataMale, dataFemale, dataChildren, dataCollection } from '../data/fake
 import MenuHeader from './MenuHeader';
 import { getCookie, setCookie } from '../cookies/Cookies';
 import { useNavigate } from 'react-router-dom';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../firebase';
+import { AiOutlineSetting } from 'react-icons/ai';
 
 const Header = () => {
   const [value, setValue] = useState('');
-  const [user, setUser] = useState();
+  const [userId, setUserId] = useState(undefined);
+  const [user, setUser] = useState([]);
+  const [openUser, SetOnpenUser] = useState(false);
+
+  const usersCollectionRef = collection(db, 'users');
+
+  const cookiesUser = getCookie('userId');
+
+  useEffect(() => {
+    setUserId(cookiesUser);
+    const getUsers = async () => {
+      let data = await getDocs(usersCollectionRef);
+      setUser(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+    getUsers();
+  }, [userId]);
+
+  console.log(typeof cookiesUser);
+  const dataUser = user.filter((data) => data.id === cookiesUser);
+
   const navigate = useNavigate();
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log(value, 'value');
     setValue('');
   };
-  const cookiesUser = getCookie('user');
-  useEffect(() => {
-    setUser(cookiesUser);
-  }, [user]);
 
   const handleUser = () => {
     if (cookiesUser === undefined) {
@@ -28,6 +45,16 @@ const Header = () => {
     } else {
       navigate('/customer/account/login');
     }
+  };
+  const handleUserProFile = () => {
+    SetOnpenUser(!openUser);
+  };
+
+  const handleLogOutUser = () => {
+    navigate('/customer/account/login');
+    setCookie('userId', undefined);
+    setUserId(undefined);
+    SetOnpenUser(false);
   };
   return (
     <div className="  w-full  flex justify-center  z-50 h-[76px] top-0 bg-white sticky items-center shadow-sm">
@@ -114,7 +141,7 @@ const Header = () => {
           <div className="flex justify-between ">
             <form
               onSubmit={handleSearch}
-              className="flex justify-center items-center w-[235px] h-[32px] border-b-[1px] border-b-slate-400"
+              className="flex justify-center relative items-center w-[235px] h-[32px] border-b-[1px] border-b-slate-400"
             >
               <input
                 className="outline-none border-none"
@@ -130,15 +157,62 @@ const Header = () => {
             </form>
             <div className="flex">
               <button>
-                <FaMapMarkerAlt className="h-[22px] ml-[22px] text-[20px] hover:text-fuchsia-700 cursor-pointer" />
+                <FaMapMarkerAlt className="h-[22px] ml-[22px] text-[20px] hover:text-fuchsia-700 cursor-pointer " />
               </button>
-              {user === undefined ? (
-                'kha'
-              ) : (
-                <button onClick={handleUser}>
-                  <FaRegUserCircle className="h-[22px] ml-[22px] text-[20px] hover:text-fuchsia-700 cursor-pointer" />
-                </button>
-              )}
+
+              <div className="flex justify-center items-center ml-[22px]">
+                {dataUser.map((data) => (
+                  <div>
+                    {userId !== 'undefined' ? (
+                      <button onClick={handleUserProFile} className="mt-[2px]">
+                        <img
+                          className="h-[24px] mt-[2px]  object-cover  w-[24px] rounded-full"
+                          src={
+                            data.url ||
+                            'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/OOjs_UI_icon_userAvatar-constructive.svg/2048px-OOjs_UI_icon_userAvatar-constructive.svg.png'
+                          }
+                        />
+                      </button>
+                    ) : (
+                      <button onClick={handleUser}>
+                        <FaRegUserCircle className="h-[22px]  text-[20px] hover:text-fuchsia-700 cursor-pointer" />
+                      </button>
+                    )}
+                    {openUser && (
+                      <div className="absolute w-[320px] h-[220px] bg-slate-200 rounded-md shadow-lg   right-[3%] top-[60px]  ">
+                        <div className="flex justify-center items-center mt-[20px]">
+                          <img
+                            className="w-[100px] h-[100px] rounded-full  object-cover"
+                            src={
+                              data.url ||
+                              'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/OOjs_UI_icon_userAvatar-constructive.svg/2048px-OOjs_UI_icon_userAvatar-constructive.svg.png'
+                            }
+                          />
+                        </div>
+                        <p className="w-full text-center  text-[17px] font-semibold ">
+                          {data.lastName} {data.firtName}
+                        </p>
+                        <div className="flex w-full mt-[18px] justify-between items-center">
+                          <button
+                            onClick={handleLogOutUser}
+                            className="ml-[20px] w-[110px] h-[35px] bg-black text-white"
+                          >
+                            Đăng xuất
+                          </button>
+
+                          <a className="mr-[20px] cursor-pointer flex justify-center items-center  w-[110px] h-[35px]  ">
+                            <span className="text-blue-600 leading-[18px] hover:border-b-[1px] hover:border-blue-600  ">
+                              Profile
+                            </span>
+                            <AiOutlineSetting className="ml-[5px] text-blue-600" />
+                          </a>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
               <button>
                 <BsFillCartFill className="h-[22px] ml-[22px] text-[20px] hover:text-fuchsia-700 cursor-pointer" />
               </button>

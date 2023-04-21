@@ -12,12 +12,13 @@ import { getCookie, setCookie } from '../cookies/Cookies';
 import { newPasswordSchema } from '../Yup/newPasswordSchema';
 import { useDispatch, useSelector } from 'react-redux';
 import { addNewPassword } from '../features/newPasswordSlice';
+import CheckInput from '../customs/CheckInput';
 
 const NewPassword = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-
+  const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState([]);
   const [messenger, setMessenger] = useState('');
   const [loading, setLoading] = useState(false);
@@ -53,12 +54,16 @@ const NewPassword = () => {
       }, 2000);
     },
   });
+
+  const onChangePassword = () => {
+    setShowPassword(!showPassword);
+  };
   return (
     <div>
       <Notification />
       <div className="flex justify-center ">
-        <div className="w-[1290px]">
-          <form className="w-[650px]" onSubmit={handleSubmit}>
+        <div className="w-[1250px]">
+          <form className="w-[650px] px-[20px]" onSubmit={handleSubmit}>
             {messenger !== '' && (
               <div className="bg-red-200 h-[42px] flex items-center mt-[20px]">
                 <BiErrorAlt className="text-[24px] ml-[20px] text-rose-900" />
@@ -69,6 +74,7 @@ const NewPassword = () => {
             <p className="text-[15px] mb-[20px] ">Vui lòng nhập mật khẩu mới.</p>
             <div className=" mb-[20px]">
               <Input
+                showPassword={showPassword}
                 id={'newPassword'}
                 errors={touched.newPassword && errors.newPassword}
                 value={values.newPassword}
@@ -79,8 +85,9 @@ const NewPassword = () => {
                 <p className="text-[12px] text-red-500 mt-[8px]">{errors.newPassword}</p>
               )}
             </div>
-            <div className=" mb-[50px]">
+            <div className="">
               <Input
+                showPassword={showPassword}
                 id={'confirmNewPassword'}
                 errors={touched.confirmNewPassword && errors.confirmNewPassword}
                 value={values.confirmNewPassword}
@@ -90,6 +97,14 @@ const NewPassword = () => {
               {touched.confirmNewPassword && errors.confirmNewPassword && (
                 <p className="text-[12px] text-red-500 mt-[8px]">{errors.confirmNewPassword}</p>
               )}
+            </div>
+            <div className="mt-[20px] mb-[50px]">
+              <CheckInput
+                onChange={onChangePassword}
+                showPassword={showPassword}
+                title="Hiển thị mật khẩu"
+                id="passwordCheck"
+              />
             </div>
             <div className="mb-[50px] flex items-center">
               <ButtonIO loading={loading} type="submit" name="Thay đổi" />

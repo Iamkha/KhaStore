@@ -6,5 +6,8 @@ export const newPasswordSchemaEmail = yup.object().shape({
 
 export const newPasswordSchema = yup.object().shape({
   newPassword: yup.string().min(5).required('Password is not null'),
-  confirmNewPassword: yup.string().oneOf([yup.ref('newPassword'), null], 'Passwords must match'),
+  confirmNewPassword: yup
+    .string()
+    .oneOf([yup.ref('newPassword'), null], 'Passwords must match')
+    .required('Password is not null'),
 });

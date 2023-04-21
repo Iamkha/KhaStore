@@ -13,19 +13,22 @@ import { BiCheckCircle, BiErrorAlt } from 'react-icons/bi';
 import { getCookie, setCookie } from '../cookies/Cookies';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeNewPassword } from '../features/newPasswordSlice';
+import { removeRegister } from '../features/registerSlice';
+import { removeUserSlide } from '../features/addUserSlide';
 
 const LogIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const messengerNewPassword = useSelector((state) => state.newPasswords);
-  console.log(messengerNewPassword);
+  const messengerNewRegister = useSelector((state) => state.newRegister);
 
   const [showPassword, setShowPassword] = useState(false);
   const [user, setUser] = useState([]);
   const [messenger, setMessenger] = useState('');
   const [messengerNewPasswordUser, setMessengerNewPasswordUser] = useState(messengerNewPassword[0]?.name);
-  console.log(messengerNewPasswordUser, 'hasvbdasv');
+  const [register, setRegister] = useState(messengerNewRegister[0]?.name);
+
   const [loading, setLoading] = useState(false);
   const { values, touched, errors, handleBlur, handleChange, handleSubmit, isSubmitting } = useFormik({
     initialValues: {
@@ -36,6 +39,10 @@ const LogIn = () => {
     onSubmit: (values, actions) => {
       const action = removeNewPassword({ id: 1 });
       dispatch(action);
+      const actionR = removeRegister({ id: 1 });
+      dispatch(actionR);
+      const actionU = removeUserSlide();
+      dispatch(actionU);
       setLoading(true);
       user.map((data) => {
         if (data.email === values.email && data.password === values.password) {
@@ -51,6 +58,7 @@ const LogIn = () => {
             actions.resetForm();
             setLoading(false);
             setMessengerNewPasswordUser(undefined);
+            setRegister(undefined);
             setMessenger(
               'Tài khoản đăng nhập không chính xác hoặc tạm thời bị vô hiệu hóa. Vui lòng đợi và thử lại sau.',
             );
@@ -78,7 +86,7 @@ const LogIn = () => {
     <div>
       <Notification />
       <div className="flex justify-center ">
-        <div className="xl:w-[1290px] w-full mb-[100px]">
+        <div className="xl:w-[1250px] w-full mb-[100px]">
           {messenger !== '' && (
             <div className="bg-red-200 h-[42px] flex items-center mt-[20px]">
               <BiErrorAlt className="text-[24px] ml-[20px] text-rose-900" />
@@ -94,9 +102,15 @@ const LogIn = () => {
               </p>
             </div>
           )}
-          <p className="font-black text-[28px] my-[30px]">TÀI KHOẢN</p>
-          <div className="flex justify-between ">
-            <form className="w-[48%]" onSubmit={handleSubmit}>
+          {register !== undefined && (
+            <div className="bg-green-100 h-[42px] flex items-center mt-[20px]">
+              <BiCheckCircle className="text-[24px] ml-[20px] text-green-500" />
+              <p className=" ml-[20px] font-semibold text-green-900   text-[13px] opacity-70">{register}</p>
+            </div>
+          )}
+          <p className="font-black text-[28px] my-[30px] px-[20px]">TÀI KHOẢN</p>
+          <div className="flex justify-between px-[20px] ">
+            <form className="w-[48%] " onSubmit={handleSubmit}>
               <p className="text-[12px] py-[12px] my-[15px] border-b-[1px]">Khách hàng đã đăng ký tài khoản</p>
               <p className="text-[15px]">Bạn đã có tài khoản, xin mời đăng nhập bằng địa chỉ email đăng ký.</p>
               <div className="w-[350px] mt-[20px]">
