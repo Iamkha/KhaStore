@@ -513,3 +513,11 @@ export const sizeMen = [
     name: 'XXL',
   },
 ];
+
+export const dataSidebarAccount = [
+  { id: 1, name: 'My Account', a: '/customer/account' },
+  { id: 2, name: 'My Orders', a: '/sales/order/history' },
+  { id: 3, name: '', a: '' },
+  { id: 4, name: 'Address Book', a: '/customer/address' },
+  { id: 5, name: 'Account Information', a: '/customer/account/edit' },
+];

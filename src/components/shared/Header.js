@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Logo from '../../images/Logo.png';
 import { FaRegUserCircle, FaMapMarkerAlt } from 'react-icons/fa';
 import { BsFillCartFill, BsSearch } from 'react-icons/bs';
 import './Header.css';
 import { dataMale, dataFemale, dataChildren, dataCollection } from '../data/fakeData';
 import MenuHeader from './MenuHeader';
-import { getCookie, setCookie } from '../cookies/Cookies';
+import { getCookie, removeCookie, setCookie } from '../cookies/Cookies';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';
@@ -13,24 +13,32 @@ import { AiOutlineSetting } from 'react-icons/ai';
 
 const Header = () => {
   const [value, setValue] = useState('');
-  const [userId, setUserId] = useState(undefined);
+  const [userId, setUserId] = useState('');
   const [user, setUser] = useState([]);
   const [openUser, SetOnpenUser] = useState(false);
 
   const usersCollectionRef = collection(db, 'users');
+  const userRef = useRef();
+  const menuRef = useRef();
 
   const cookiesUser = getCookie('userId');
 
   useEffect(() => {
-    setUserId(cookiesUser);
+    setUserId(getCookie('userId'));
     const getUsers = async () => {
       let data = await getDocs(usersCollectionRef);
       setUser(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     getUsers();
-  }, [userId]);
+  }, [userId, user]);
 
-  console.log(typeof cookiesUser);
+  useEffect(() => {
+    window.addEventListener('click', (e) => {
+      if (e.target !== userRef.current && e.target !== menuRef.current) {
+        SetOnpenUser(false);
+      }
+    });
+  }, []);
   const dataUser = user.filter((data) => data.id === cookiesUser);
 
   const navigate = useNavigate();
@@ -40,7 +48,7 @@ const Header = () => {
   };
 
   const handleUser = () => {
-    if (cookiesUser === undefined) {
+    if (cookiesUser !== '') {
       alert('Bạn đã đăng nhập rồi nhé!');
     } else {
       navigate('/customer/account/login');
@@ -50,12 +58,13 @@ const Header = () => {
     SetOnpenUser(!openUser);
   };
 
-  const handleLogOutUser = () => {
+  function handleLogOutUser() {
     navigate('/customer/account/login');
-    setCookie('userId', undefined);
-    setUserId(undefined);
+    setCookie('userId', '');
+    setUserId('');
     SetOnpenUser(false);
-  };
+  }
+
   return (
     <div className="  w-full  flex justify-center  z-50 h-[76px] top-0 bg-white sticky items-center shadow-sm">
       <div className="relative w-screen flex justify-center">
@@ -162,10 +171,12 @@ const Header = () => {
 
               <div className="flex justify-center items-center ml-[22px]">
                 {dataUser.map((data) => (
-                  <div>
-                    {userId !== 'undefined' ? (
-                      <button onClick={handleUserProFile} className="mt-[2px]">
+                  <div key={data.id}>
+                    {userId !== '' && (
+                      <button className="mt-[2px]">
                         <img
+                          ref={userRef}
+                          onClick={handleUserProFile}
                           className="h-[24px] mt-[2px]  object-cover  w-[24px] rounded-full"
                           src={
                             data.url ||
@@ -173,13 +184,13 @@ const Header = () => {
                           }
                         />
                       </button>
-                    ) : (
-                      <button onClick={handleUser}>
-                        <FaRegUserCircle className="h-[22px]  text-[20px] hover:text-fuchsia-700 cursor-pointer" />
-                      </button>
                     )}
+
                     {openUser && (
-                      <div className="absolute w-[320px] h-[220px] bg-slate-200 rounded-md shadow-lg   right-[3%] top-[60px]  ">
+                      <div
+                        ref={menuRef}
+                        className="absolute w-[320px] h-[220px] bg-slate-200 rounded-md shadow-lg   right-[3%] top-[60px]  "
+                      >
                         <div className="flex justify-center items-center mt-[20px]">
                           <img
                             className="w-[100px] h-[100px] rounded-full  object-cover"
@@ -200,7 +211,10 @@ const Header = () => {
                             Đăng xuất
                           </button>
 
-                          <a className="mr-[20px] cursor-pointer flex justify-center items-center  w-[110px] h-[35px]  ">
+                          <a
+                            href="/customer/account"
+                            className="mr-[20px] cursor-pointer flex justify-center items-center  w-[110px] h-[35px]  "
+                          >
                             <span className="text-blue-600 leading-[18px] hover:border-b-[1px] hover:border-blue-600  ">
                               Profile
                             </span>
@@ -212,7 +226,11 @@ const Header = () => {
                   </div>
                 ))}
               </div>
-
+              {userId === '' && (
+                <button onClick={handleUser}>
+                  <FaRegUserCircle className="h-[22px]  text-[20px] hover:text-fuchsia-700 cursor-pointer" />
+                </button>
+              )}
               <button>
                 <BsFillCartFill className="h-[22px] ml-[22px] text-[20px] hover:text-fuchsia-700 cursor-pointer" />
               </button>

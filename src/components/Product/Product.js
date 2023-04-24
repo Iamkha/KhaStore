@@ -20,7 +20,6 @@ const Product = ({ ...props }) => {
   useEffect(() => {}, []);
   const handleClick = () => {
     window.alert('anhkha');
-    setCookie('user', undefined);
     setCount(count + 1);
   };
 
