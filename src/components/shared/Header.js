@@ -48,8 +48,8 @@ const Header = () => {
   };
 
   const handleUser = () => {
-    if (cookiesUser !== '') {
-      alert('Bạn đã đăng nhập rồi nhé!');
+    if (cookiesUser !== '' || cookiesUser !== undefined) {
+      navigate('/customer/account/login');
     } else {
       navigate('/customer/account/login');
     }

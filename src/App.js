@@ -15,8 +15,8 @@ import MyAccount from './components/profile/MyAccount';
 import MyOders from './components/profile/MyOders';
 import AddressBooks from './components/profile/AddressBooks';
 import AccountInformation from './components/profile/AccountInformation';
-import ReviewDetails from './components/profile/ReviewDetails';
 import AddNewAddress from './components/profile/AddNewAddress';
+import ReviewDetailsOrder from './components/profile/ReviewDetailsOrder';
 
 function App() {
   const dbRef = ref(database);
@@ -48,7 +48,7 @@ function App() {
         <Route path="/sales/order/history" element={<MyOders />} />
         <Route path="/customer/address" element={<AddressBooks />} />
         <Route path="/customer/account/edit" element={<AccountInformation />} />
-        <Route path="/review/customer/view/:view" element={<ReviewDetails />} />
+        <Route path="/review/customer/order/view/:view/:view" element={<ReviewDetailsOrder />} />
         <Route path="/customer/account" element={<MyAccount />} />
         <Route path="/customer/address/new" element={<AddNewAddress />} />
       </Routes>
