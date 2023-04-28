@@ -5,6 +5,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { getCookie } from '../cookies/Cookies';
 import SumOderTotal from '../customs/SumOderTotal';
+import { InitiakValues } from './InitiakValues';
 
 const MyAccount = () => {
   const [user, setUser] = useState([]);

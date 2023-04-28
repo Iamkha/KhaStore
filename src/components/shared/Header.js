@@ -189,7 +189,7 @@ const Header = () => {
                     {openUser && (
                       <div
                         ref={menuRef}
-                        className="absolute w-[320px] h-[220px] bg-slate-200 rounded-md shadow-lg   right-[3%] top-[60px]  "
+                        className="absolute w-[320px] h-[220px] bg-slate-100 rounded-md shadow-lg   right-[3%] top-[60px]  "
                       >
                         <div className="flex justify-center items-center mt-[20px]">
                           <img
@@ -227,6 +227,11 @@ const Header = () => {
                 ))}
               </div>
               {userId === '' && (
+                <button onClick={handleUser}>
+                  <FaRegUserCircle className="h-[22px]  text-[20px] hover:text-fuchsia-700 cursor-pointer" />
+                </button>
+              )}
+              {userId === undefined && (
                 <button onClick={handleUser}>
                   <FaRegUserCircle className="h-[22px]  text-[20px] hover:text-fuchsia-700 cursor-pointer" />
                 </button>

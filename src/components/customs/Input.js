@@ -2,7 +2,7 @@ import React from 'react';
 import './Input.css';
 
 const Input = ({ ...props }) => {
-  const { id, errors, showPassword = true, name, value, setonChange, placeholder, onBlur } = props;
+  const { id, errors, showPassword = true, name, value = '', setonChange, placeholder, onBlur } = props;
   return (
     <div>
       <p className="nameInput font-[15px]">{name}</p>
