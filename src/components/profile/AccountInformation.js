@@ -1,13 +1,9 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { BiErrorAlt } from 'react-icons/bi';
-import { useNavigate } from 'react-router-dom';
+import { BiCheckCircle, BiErrorAlt } from 'react-icons/bi';
 import { useFormik } from 'formik';
-import { addDoc, collection, getDoc, getDocs } from 'firebase/firestore';
-import { useDispatch } from 'react-redux';
-import { v4 as uuidv4 } from 'uuid';
+import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
-import { addRegister } from '../features/registerSlice';
 import CheckInput from '../customs/CheckInput';
 import ButtonIO from '../LoginLogOut/ButtonIO';
 import Input from '../customs/Input';
@@ -17,22 +13,30 @@ import { editAccount } from '../Yup/editAccount';
 import { getCookie } from '../cookies/Cookies';
 
 const AccountInformation = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const [allowRemote, setAllowRemote] = useState(false);
   const [registerReceiveNewsletter, setRegisterReceiveNewsletter] = useState(false);
   const [user, setUser] = useState([]);
-  const [messenger, setMessenger] = useState('đas');
+  const [messenger, setMessenger] = useState('');
+  const [messengerSuccess, setMessengerSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
   const usersCollectionRef = collection(db, 'users');
   const cookiesUser = getCookie('userId');
+  const dataUser = user.filter((data) => data.id == cookiesUser);
 
-  console.log(user);
   useEffect(() => {
     const getUsers = async () => {
       let data = await getDocs(usersCollectionRef);
+      data.docs.map((doc) => {
+        if (doc.id === cookiesUser) {
+          setFieldValue('lastName', doc.data().lastName);
+          setFieldValue('firtName', doc.data().firtName);
+          setFieldValue('gender', doc.data().gender);
+          setFieldValue('email', doc.data().email);
+          setFieldValue('file', doc.data().url);
+        }
+      });
       setUser(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     getUsers();
@@ -40,7 +44,7 @@ const AccountInformation = () => {
 
   const { setFieldValue, values, touched, errors, handleChange, handleSubmit } = useFormik({
     initialValues: {
-      lastName: 'kha',
+      lastName: '',
       firtName: '',
       oldPassword: '',
       file: '',
@@ -52,39 +56,37 @@ const AccountInformation = () => {
     },
     validationSchema: editAccount,
     onSubmit: (values, actions) => {
+      console.log(values, 'values');
       setLoading(true);
-      const checkUser = user.map((data) => String(data.email) === String(values.email));
+      const checkUser = dataUser.map((data) => String(data.password) === String(values.oldPassword));
 
       setTimeout(() => {
-        if (checkUser.includes(true)) {
+        if (checkUser.includes(false)) {
           setRegisterReceiveNewsletter(false);
           setShowPassword(false);
           setAllowRemote(false);
           actions.resetForm();
           setLoading(false);
-          setMessenger('Email đã tồn tại xin hãy thử email khác.');
+          setMessenger('Tài khoản hoặc mật khẩu của bạn chưa đúng');
         } else {
-          const action = addRegister({ name: 'Bạn đã đăng kí tài khoản thành công.', id: 1 });
-          dispatch(action);
-          // const actionUser = addUserSlide({
-          //   date: values.date,
-          //   email: values.email,
-          //   url: values.url,
-          //   id: uuidv4(),
-          //   firtName: values.firtName,
-          //   lastName: values.lastName,
-          //   gender: values.gender,
-          //   password: values.password,
-          //   registerReceiveNewsletter: registerReceiveNewsletter,
-          //   allowRemote: allowRemote,
-          // });
-          // dispatch(actionUser);
           setRegisterReceiveNewsletter(false);
           setShowPassword(false);
           setAllowRemote(false);
           setLoading(false);
           actions.resetForm();
-          setMessenger('');
+          setMessengerSuccess('bạn đã thay đổi thành công!');
+          const userDoc = doc(db, 'users', cookiesUser);
+          updateDoc(userDoc, {
+            password: values.password,
+            firtName: values.firtName,
+            lastName: values.lastName,
+            url: values.file,
+            gender: values.gender,
+            date: values.date,
+            email: values.email,
+            allowRemote: allowRemote,
+            registerReceiveNewsletter: registerReceiveNewsletter,
+          });
         }
       }, 2000);
     },
@@ -113,6 +115,12 @@ const AccountInformation = () => {
                 <p className=" ml-[20px] font-semibold text-rose-900   text-[13px] opacity-70">{messenger}</p>
               </div>
             )}
+            {messengerSuccess !== '' && (
+              <div className="bg-green-100 h-[42px] flex items-center mt-[20px]">
+                <BiCheckCircle className="text-[24px] ml-[20px] text-green-500" />
+                <p className=" ml-[20px] font-semibold text-green-900   text-[13px] opacity-70">{messengerSuccess}</p>
+              </div>
+            )}
             <form onSubmit={handleSubmit}>
               <div className="flex justify-between">
                 <div className="w-[48%]">
@@ -129,7 +137,6 @@ const AccountInformation = () => {
                   )}
 
                   <div className="mt-[20px]">
-                    <input value={'dasdsa'} />
                     <Input
                       id={'lastName'}
                       errors={touched.lastName && errors.lastName}
@@ -203,12 +210,10 @@ const AccountInformation = () => {
                       onChange={handleChange}
                       value={values.date}
                     />
-                    {touched.lastName && errors.lastName && (
-                      <p className="text-[12px]  text-red-500 mt-[8px]">{errors.lastName}</p>
-                    )}
+                    {touched.date && errors.date && <p className="text-[12px]  text-red-500 mt-[8px]">{errors.date}</p>}
                   </div>
                   <div className="mt-[20px]">
-                    <p className="font-[15px]">Date of Birth</p>
+                    <p className="font-[15px]">Gender</p>
 
                     <select
                       id={'gender'}
@@ -226,7 +231,9 @@ const AccountInformation = () => {
                       <option value="Female">Female</option>
                       <option value="Not Specified">Not Specified</option>
                     </select>
-                    {touched.date && errors.date && <p className="text-[12px]  text-red-500 mt-[8px]">{errors.date}</p>}
+                    {touched.gender && errors.gender && (
+                      <p className="text-[12px]  text-red-500 mt-[8px]">{errors.date}</p>
+                    )}
                   </div>
 
                   <div className="my-[20px]">

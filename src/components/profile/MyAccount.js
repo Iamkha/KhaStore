@@ -5,7 +5,6 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { getCookie } from '../cookies/Cookies';
 import SumOderTotal from '../customs/SumOderTotal';
-import { InitiakValues } from './InitiakValues';
 
 const MyAccount = () => {
   const [user, setUser] = useState([]);
@@ -30,16 +29,15 @@ const MyAccount = () => {
       }
     })
     .reverse();
-  const dataMyRecentReviews = orderTotal.map((data) => data.children_data).flat();
-  const dataMyRecentReviewsLenght = dataMyRecentReviews.length;
-  const dataMyRecentReviewsAcount = dataMyRecentReviews
-    .filter((arr, index) => {
-      if (index > dataMyRecentReviewsLenght - 3) {
-        return arr;
-      }
-    })
-    .reverse();
-  console.log(dataMyRecentReviewsAcount);
+  // const dataMyRecentReviews = orderTotal.map((data) => data.children_data).flat();
+  // const dataMyRecentReviewsLenght = dataMyRecentReviews.length;
+  // const dataMyRecentReviewsAcount = dataMyRecentReviews
+  //   .filter((arr, index) => {
+  //     if (index > dataMyRecentReviewsLenght - 3) {
+  //       return arr;
+  //     }
+  //   })
+  //   .reverse();
 
   return (
     <div className="w-full flex justify-center mt-[50px] ">
@@ -63,12 +61,18 @@ const MyAccount = () => {
               ))}
 
               <div className="mt-[10px]">
-                <a className=" after:content-[''] after:border-l-[1px] after:border-l-sky-500 after:h-[12px]  after:inline-block after:mx-[10px] ">
+                <a
+                  href="/customer/account/edit"
+                  className=" after:content-[''] after:border-l-[1px] after:border-l-sky-500 after:h-[12px]  after:inline-block after:mx-[10px] "
+                >
                   <span className="text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
                     Edit
                   </span>
                 </a>
-                <a className="  text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
+                <a
+                  href="/customer/account/edit"
+                  className="  text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500"
+                >
                   Change Password
                 </a>
               </div>
@@ -83,7 +87,10 @@ const MyAccount = () => {
           </div>
           <div className="boder flex border-b-[1px] border-b-slate-400 py-[10px] mb-[20px]   ">
             <p className="text-[22px]  leading-[29px]  font-light">Address Book</p>
-            <a className=" mt-[10px] leading-[15px]  ml-[10px]  text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
+            <a
+              href="/customer/address"
+              className=" mt-[10px] leading-[15px]  ml-[10px]  text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500"
+            >
               Manage Addresses
             </a>
           </div>
@@ -91,56 +98,78 @@ const MyAccount = () => {
             <div className="w-[48%] ">
               <p className="text-[18px] font-bold mb-[10px]">Default Billing Address</p>
               {dataUser.map((data) => (
-                <div key={data.id}>
-                  <p>
-                    {data.lastName} {data.firtName}
-                  </p>
-                  <p>{data.defaultBillingAddress.road}</p>
-                  <p>{data.defaultBillingAddress.wards}</p>
-                  <p>{data.defaultBillingAddress.town}</p>
-                  <p>{data.defaultBillingAddress.city}</p>
-                  <p>{data.defaultBillingAddress.country}</p>
-                  <div className="flex">
-                    <p>T:</p>
-                    <a className=" leading-[23px] ml-[10px] text-[16px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
-                      {data.defaultBillingAddress.phone}
-                    </a>
-                  </div>
+                <div>
+                  {data.defaultBillingAddress !== undefined ? (
+                    <div key={data.id}>
+                      <p>{data.defaultBillingAddress.fullName}</p>
+                      <p>{data.defaultBillingAddress.road}</p>
+                      <p>{data.defaultBillingAddress.wards}</p>
+                      <p>{data.defaultBillingAddress.town}</p>
+                      <p>{data.defaultBillingAddress.city}</p>
+                      <p>{data.defaultBillingAddress.country}</p>
+                      <div className="flex">
+                        <p>T:</p>
+                        <a className=" leading-[23px] ml-[10px] text-[16px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
+                          {data.defaultBillingAddress.phone}
+                        </a>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <p class="text-[14px] text-black-333333 h-[24px] leading-[24px]">
+                        You have not set a default billing address.
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
 
               <div className="mt-[10px]">
-                <a className="  text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
+                <a
+                  href="/customer/address/new"
+                  className="  text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500"
+                >
                   Edit Address
                 </a>
               </div>
             </div>
             <div className="w-[48%]">
-              <p className="text-[18px] font-bold mb-[10px]">Default Shipping Address</p>
               {dataUser.map((data) => (
-                <div key={data.id}>
-                  <p>
-                    {data.lastName} {data.firtName}
-                  </p>
-                  <p>{data.defaultBillingAddress.road}</p>
-                  <p>{data.defaultBillingAddress.wards}</p>
-                  <p>{data.defaultBillingAddress.town}</p>
-                  <p>{data.defaultBillingAddress.city}</p>
-                  <p>{data.defaultBillingAddress.country}</p>
-                  <div className="flex">
-                    <p>T:</p>
-                    <a className=" leading-[23px] ml-[10px] text-[16px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
-                      {data.defaultBillingAddress.phone}
-                    </a>
-                  </div>
+                <div>
+                  <p className="text-[18px] font-bold mb-[10px]">Default Shipping Address</p>
+                  {data.defaultBillingAddress !== undefined ? (
+                    <div key={data.id}>
+                      <p>{data.defaultBillingAddress.fullName}</p>
+                      <p>{data.defaultBillingAddress.road}</p>
+                      <p>{data.defaultBillingAddress.wards}</p>
+                      <p>{data.defaultBillingAddress.town}</p>
+                      <p>{data.defaultBillingAddress.city}</p>
+                      <p>{data.defaultBillingAddress.country}</p>
+                      <div className="flex">
+                        <p>T:</p>
+                        <a className=" leading-[23px] ml-[10px] text-[16px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
+                          {data.defaultBillingAddress.phone}
+                        </a>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <p class="text-[14px] text-black-333333 h-[24px] leading-[24px]">
+                        You have not set a default shipping address.
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
-              <a className=" mt-[10px]  text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
+              <a
+                href="/customer/address/new"
+                className=" mt-[10px]  text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500"
+              >
                 Edit Address
               </a>
             </div>
           </div>
-          <div className="boder flex border-b-[1px] border-b-slate-400 py-[10px] mb-[20px]   ">
+          {/* <div className="boder flex border-b-[1px] border-b-slate-400 py-[10px] mb-[20px]   ">
             <p className="text-[22px]  leading-[29px]  font-light">My Recent Reviews</p>
             <a className=" mt-[10px] leading-[15px]  ml-[10px]  text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
               View All
@@ -158,7 +187,7 @@ const MyAccount = () => {
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
           <div className="boder flex border-b-[1px] border-b-slate-400 py-[10px]   ">
             <p className="text-[22px]  leading-[29px]  font-light">Recent Orders</p>
             <a
@@ -186,34 +215,48 @@ const MyAccount = () => {
           </div>
 
           {dataOrdersAcount.map((data) => (
-            <div key={data.id} className="border-b-[1px] border-b-slate-400  text-black-333   flex  items-baseline">
-              <p className="text-[14px] text-black-333 leading-[20px] font-normal w-[15.067%] px-[10px] py-[11px]">
-                #00000{data.order}
-              </p>
-              <p className="text-[14px] text-black-333 leading-[20px] font-normal w-[12%] px-[10px] py-[11px]">
-                {data.date}
-              </p>
-              <p className="text-[14px]  text-black-333 leading-[20px] font-normal w-[18.62%] px-[10px] py-[11px]">
-                {data.shipTo}
-              </p>
-              <p className="text-[14px] text-black-333 leading-[20px] font-normal w-[16.05%] px-[10px] py-[11px]">
-                <SumOderTotal shipping={data.shipping} arrData={data.children_data} />
-              </p>
-              <p className="text-[14px] text-black-333 leading-[20px] font-normal w-[12.4%] px-[10px] py-[11px]">
-                {data.status}
-              </p>
-              <div className="text-[14px] text-black-333 leading-[20px] font-normal w-[26.067%] px-[10px] py-[11px]">
-                <div className="flex">
-                  <a className=" after:content-[''] after:border-l-[1px] after:border-l-sky-500 after:h-[12px]  after:inline-block after:mx-[10px] ">
-                    <span className="text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
-                      View Order
-                    </span>
-                  </a>
-                  <a className=" leading-[19px]  text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
-                    Reorder
-                  </a>
+            <div>
+              {data.children_data !== undefined ? (
+                <div key={data.id} className="border-b-[1px] border-b-slate-400  text-black-333   flex  items-baseline">
+                  <p className="text-[14px] text-black-333 leading-[20px] font-normal w-[15.067%] px-[10px] py-[11px]">
+                    #00000{data.order}
+                  </p>
+                  <p className="text-[14px] text-black-333 leading-[20px] font-normal w-[12%] px-[10px] py-[11px]">
+                    {data.date}
+                  </p>
+                  <p className="text-[14px]  text-black-333 leading-[20px] font-normal w-[18.62%] px-[10px] py-[11px]">
+                    {data.shipTo}
+                  </p>
+                  <p className="text-[14px] text-black-333 leading-[20px] font-normal w-[16.05%] px-[10px] py-[11px]">
+                    <SumOderTotal shipping={data.shipping} arrData={data.children_data} />
+                  </p>
+                  <p className="text-[14px] text-black-333 leading-[20px] font-normal w-[12.4%] px-[10px] py-[11px]">
+                    {data.status}
+                  </p>
+                  <div className="text-[14px] text-black-333 leading-[20px] font-normal w-[26.067%] px-[10px] py-[11px]">
+                    <div className="flex">
+                      <a
+                        href={`/review/customer/order/view/${data.order}/${data.shipTo}`}
+                        className=" after:content-[''] after:border-l-[1px] after:border-l-sky-500 after:h-[12px]  after:inline-block after:mx-[10px] "
+                      >
+                        <span className="text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
+                          View Order
+                        </span>
+                      </a>
+                      <a className=" leading-[18px]  text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
+                        Reorder
+                      </a>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div></div>
+              )}
+            </div>
+          ))}
+          {dataUser.map((data) => (
+            <div>
+              {data.recentOrders === undefined && <p className="mt-3">Bạn chưa đặt mua bất kì sản phẩm nào.</p>}
             </div>
           ))}
         </div>

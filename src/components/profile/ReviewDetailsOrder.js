@@ -143,7 +143,7 @@ const ReviewDetailsOrder = () => {
               {dataUser.map((data) => (
                 <div className="text-[14px]" key={data.id}>
                   <p>
-                    {data.lastName} {data.firtName}
+                    <p>{data.defaultBillingAddress.fullName}</p>
                   </p>
                   <p>{data.defaultBillingAddress.road}</p>
                   <p>{data.defaultBillingAddress.wards}</p>
@@ -178,7 +178,7 @@ const ReviewDetailsOrder = () => {
                 {dataUser.map((data) => (
                   <div className="text-[14px]" key={data.id}>
                     <p>
-                      {data.lastName} {data.firtName}
+                      <p>{data.defaultBillingAddress.fullName}</p>
                     </p>
                     <p>{data.defaultBillingAddress.road}</p>
                     <p>{data.defaultBillingAddress.wards}</p>

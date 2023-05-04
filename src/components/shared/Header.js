@@ -189,7 +189,7 @@ const Header = () => {
                     {openUser && (
                       <div
                         ref={menuRef}
-                        className="absolute w-[320px] h-[220px] bg-slate-100 rounded-md shadow-lg   right-[3%] top-[60px]  "
+                        className="absolute w-[320px] h-[220px] bg-slate-100 rounded-md shadow-lg   right-[7%] top-[60px]  "
                       >
                         <div className="flex justify-center items-center mt-[20px]">
                           <img

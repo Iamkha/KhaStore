@@ -33,7 +33,7 @@ const MyOders = () => {
       }
     })
     .reverse();
-  const patitionLenght = Math.ceil(dataOrdersAcount.length / pagition);
+  const patitionLenght = Math.ceil(orderTotal.length / pagition);
 
   const dataPatition = orderTotal.filter((arr, index) => {
     if (index >= paging * pagition - pagition && index < paging * pagition) {
@@ -97,7 +97,12 @@ const MyOders = () => {
               </div>
             </div>
           ))}
-          <div className="flex justify-between mt-[50px] items-center">
+          {dataUser.map((data) => (
+            <div>
+              {data.recentOrders === undefined && <p className="mt-3">Bạn chưa đặt mua bất kì sản phẩm nào.</p>}
+            </div>
+          ))}
+          <div className="flex justify-between mt-[100px] items-center">
             <p>{dataOrderLenght} Item</p>
             <Paging paging={paging} patitionLenght={patitionLenght} setPaging={setPaging} />
             <div className="flex items-center">
@@ -106,6 +111,14 @@ const MyOders = () => {
               <p className="ml-[10px]">per page</p>
             </div>
           </div>
+          {/* <div className="w-full  gap-3 mt-[50px] h-[30px] flex justify-end text ">
+            <a
+              href="/review/customer"
+              className="  flex leading-[14px] items-center  text-[18px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500"
+            >
+              My Product Reviews
+            </a>
+          </div> */}
         </div>
       </div>
     </div>

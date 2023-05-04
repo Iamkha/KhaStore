@@ -13,6 +13,7 @@ const AddressBooks = () => {
   useEffect(() => {
     const getUsers = async () => {
       let data = await getDocs(usersCollectionRef);
+
       setUser(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     getUsers();
@@ -31,51 +32,73 @@ const AddressBooks = () => {
             <div className="w-[48%] ">
               <p className="text-[18px] font-bold mb-[10px]">Default Billing Address</p>
               {dataUser.map((data) => (
-                <div key={data.id}>
-                  <p>
-                    {data.lastName} {data.firtName}
-                  </p>
-                  <p>{data.defaultBillingAddress.road}</p>
-                  <p>{data.defaultBillingAddress.wards}</p>
-                  <p>{data.defaultBillingAddress.town}</p>
-                  <p>{data.defaultBillingAddress.city}</p>
-                  <p>{data.defaultBillingAddress.country}</p>
-                  <div className="flex">
-                    <p>T:</p>
-                    <a className=" leading-[23px] ml-[10px] text-[16px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
-                      {data.defaultBillingAddress.phone}
-                    </a>
-                  </div>
+                <div>
+                  {data.defaultBillingAddress !== undefined ? (
+                    <div key={data.id}>
+                      <p>{data.defaultBillingAddress.fullName}</p>
+                      <p>{data.defaultBillingAddress.road}</p>
+                      <p>{data.defaultBillingAddress.wards}</p>
+                      <p>{data.defaultBillingAddress.town}</p>
+                      <p>{data.defaultBillingAddress.city}</p>
+                      <p>{data.defaultBillingAddress.country}</p>
+                      <div className="flex">
+                        <p>T:</p>
+                        <a className=" leading-[23px] ml-[10px] text-[16px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
+                          {data.defaultBillingAddress.phone}
+                        </a>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <p class="text-[14px] text-black-333333 h-[24px] leading-[24px]">
+                        You have not set a default billing address.
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
 
               <div className="">
-                <a className="  text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
+                <a
+                  href="/customer/address/new"
+                  className="  text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500"
+                >
                   Change Billing Address
                 </a>
               </div>
             </div>
             <div className="w-[48%]">
-              <p className="text-[18px] font-bold mb-[10px]">Default Shipping Address</p>
               {dataUser.map((data) => (
-                <div key={data.id}>
-                  <p>
-                    {data.lastName} {data.firtName}
-                  </p>
-                  <p>{data.defaultBillingAddress.road}</p>
-                  <p>{data.defaultBillingAddress.wards}</p>
-                  <p>{data.defaultBillingAddress.town}</p>
-                  <p>{data.defaultBillingAddress.city}</p>
-                  <p>{data.defaultBillingAddress.country}</p>
-                  <div className="flex">
-                    <p>T:</p>
-                    <a className=" leading-[23px] ml-[10px] text-[16px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
-                      {data.defaultBillingAddress.phone}
-                    </a>
-                  </div>
+                <div>
+                  <p className="text-[18px] font-bold mb-[10px]">Default Shipping Address</p>
+                  {data.defaultBillingAddress !== undefined ? (
+                    <div key={data.id}>
+                      <p>{data.defaultBillingAddress.fullName}</p>
+                      <p>{data.defaultBillingAddress.road}</p>
+                      <p>{data.defaultBillingAddress.wards}</p>
+                      <p>{data.defaultBillingAddress.town}</p>
+                      <p>{data.defaultBillingAddress.city}</p>
+                      <p>{data.defaultBillingAddress.country}</p>
+                      <div className="flex">
+                        <p>T:</p>
+                        <a className=" leading-[23px] ml-[10px] text-[16px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
+                          {data.defaultBillingAddress.phone}
+                        </a>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <p class="text-[14px] text-black-333333 h-[24px] leading-[24px]">
+                        You have not set a default shipping address.
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
-              <a className="  text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500">
+              <a
+                href="/customer/address/new"
+                className="  text-[14px] text-sky-500 cursor-pointer hover:border-b-[1px] hover:border-b-sky-500"
+              >
                 Change Shipping Address
               </a>
             </div>
@@ -88,7 +111,7 @@ const AddressBooks = () => {
             href="/customer/address/new"
             className="font-semibold text-white bg-sky-700 hover:bg-sky-600 px-[15px] py-[7px]"
           >
-            Add New Address
+            Edit Address
           </a>
         </div>
       </div>

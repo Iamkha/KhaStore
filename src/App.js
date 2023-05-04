@@ -17,6 +17,8 @@ import AddressBooks from './components/profile/AddressBooks';
 import AccountInformation from './components/profile/AccountInformation';
 import AddNewAddress from './components/profile/AddNewAddress';
 import ReviewDetailsOrder from './components/profile/ReviewDetailsOrder';
+import MyProductReview from './components/profile/MyProductReview';
+import ReviewDetails from './components/profile/ReviewDetails';
 
 function App() {
   const dbRef = ref(database);
